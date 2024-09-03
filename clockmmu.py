@@ -3,9 +3,9 @@ from mmu import MMU
 
 class ClockMMU(MMU):
     def __init__(self, frames):
-        """
-        Initialize the ClockMMU with the given number of frames.
-        """
+
+        # Initialize the ClockMMU with the given number of frames.
+
         self.num_frames = frames
         self.frames = [None] * frames  # List to store page information
         self.clock_hand = 0  # Pointer for clock algorithm
@@ -16,21 +16,21 @@ class ClockMMU(MMU):
         self.debug = False
 
     def set_debug(self):
-        """
-        Enable debug mode.
-        """
+
+        # Enable debug mode.
+
         self.debug = True
 
     def reset_debug(self):
-        """
-        Disable debug mode.
-        """
+
+        # Disable debug mode.
+
         self.debug = False
 
     def read_memory(self, page_number):
-        """
-        Handle memory read operation for the given page number.
-        """
+
+        # Handle memory read operation for the given page number.
+
         if page_number in self.page_table:
             frame_index = self.page_table[page_number]
             frame = self.frames[frame_index]
@@ -44,9 +44,9 @@ class ClockMMU(MMU):
             self._load_page(page_number, is_write=False)
 
     def write_memory(self, page_number):
-        """
-        Handle memory write operation for the given page number.
-        """
+
+        # Handle memory write operation for the given page number.
+
         if page_number in self.page_table:
             frame_index = self.page_table[page_number]
             frame = self.frames[frame_index]
@@ -61,9 +61,9 @@ class ClockMMU(MMU):
             self._load_page(page_number, is_write=True)
 
     def _load_page(self, page_number, is_write):
-        """
-        Load the page into memory using the clock replacement algorithm.
-        """
+
+        # Load the page into memory using the clock replacement algorithm.
+
         # Check if there is a free frame available
         for i in range(self.num_frames):
             if self.frames[i] is None:
@@ -114,19 +114,19 @@ class ClockMMU(MMU):
                 self.clock_hand = (self.clock_hand + 1) % self.num_frames
 
     def get_total_disk_reads(self):
-        """
-        Return the total number of disk reads.
-        """
+
+        # Return the total number of disk reads.
+
         return self.disk_reads
 
     def get_total_disk_writes(self):
-        """
-        Return the total number of disk writes.
-        """
+
+        # Return the total number of disk writes.
+
         return self.disk_writes
 
     def get_total_page_faults(self):
-        """
-        Return the total number of page faults.
-        """
+
+        # Return the total number of page faults.
+
         return self.page_faults
