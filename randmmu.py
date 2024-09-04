@@ -3,19 +3,8 @@ from mmu import MMU
 
 class RandMMU(MMU):
     def __init__(self, frames):
-        self.frames = frames  # Number of page frames
-        self.page_table = {}  # Maps page number to frame index
+        super().__init__(frames)
         self.frame_list = []  # List of page numbers in memory
-        self.disk_reads = 0
-        self.disk_writes = 0
-        self.page_faults = 0
-        self.debug = False
-
-    def set_debug(self):
-        self.debug = True
-
-    def reset_debug(self):
-        self.debug = False
 
     def read_memory(self, page_number):
         if page_number in self.page_table:
@@ -43,13 +32,13 @@ class RandMMU(MMU):
         self._mark_dirty(page_number)
 
     def _load_page(self, page_number):
-        if len(self.frame_list) < self.frames:
+        if len(self.frame_list) < self.num_frames:
             # Free frame available, no need to evict
             frame_index = len(self.frame_list)
             self.frame_list.append(page_number)
         else:
             # Evict a random page
-            evict_index = random.randint(0, self.frames - 1)
+            evict_index = random.randint(0, self.num_frames - 1)
             evicted_page = self.frame_list[evict_index]
             if self.debug:
                 print(f"Evicting page {evicted_page} from frame {evict_index}")
@@ -65,14 +54,6 @@ class RandMMU(MMU):
 
         self.page_table[page_number] = frame_index
 
-    def get_total_disk_reads(self):
-        return self.disk_reads
-
-    def get_total_disk_writes(self):
-        return self.disk_writes
-
-    def get_total_page_faults(self):
-        return self.page_faults
 
     def _mark_dirty(self, page_number):
         # In a real scenario, we'd track dirty pages separately
