@@ -28,7 +28,7 @@ class RandMMU(MMU):
             if self.debug:
                 print(f"Page fault: loaded page {page_number} (write)")
 
-        # Mark the page as dirty for write operations
+
         self._mark_dirty(page_number)
 
     def _load_page(self, page_number):
@@ -56,8 +56,6 @@ class RandMMU(MMU):
 
 
     def _mark_dirty(self, page_number):
-        # In a real scenario, we'd track dirty pages separately
-        # For now, just print debug if enabled
         if self.debug:
             print(f"Page {page_number} marked as dirty")
 
