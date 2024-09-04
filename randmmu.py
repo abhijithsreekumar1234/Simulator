@@ -39,16 +39,16 @@ class RandMMU(MMU):
             if self.debug:
                 print(f"Page fault: loaded page {page_number} (write)")
 
-        # Mark the page as dirty for write operations
+
         self._mark_dirty(page_number)
 
     def _load_page(self, page_number):
         if len(self.frame_list) < self.frames:
-            # Free frame available, no need to evict
+            
             frame_index = len(self.frame_list)
             self.frame_list.append(page_number)
         else:
-            # Evict a random page
+
             evict_index = random.randint(0, self.frames - 1)
             evicted_page = self.frame_list[evict_index]
             if self.debug:
@@ -75,8 +75,6 @@ class RandMMU(MMU):
         return self.page_faults
 
     def _mark_dirty(self, page_number):
-        # In a real scenario, we'd track dirty pages separately
-        # For now, just print debug if enabled
         if self.debug:
             print(f"Page {page_number} marked as dirty")
 
