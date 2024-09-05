@@ -3,9 +3,8 @@ from mmu import MMU
 class LruMMU(MMU):
     def __init__(self, frames):
         super().__init__(frames)
-        # TODO: Constructor logic for LruMMU
         self._usage_order = [] # List to store page usage order
-        self._dirty_pages = set() # Set to store dirty pages
+        self.__dirty_pages = set() # Set to store dirty pages
         pass
 
     def read_memory(self, page_number):
@@ -22,6 +21,7 @@ class LruMMU(MMU):
                 print(f"Page fault: loaded page {page_number}")
 
     def write_memory(self, page_number):
+        self._mark_dirty(page_number)
         if page_number in self.page_table:
             if self.debug:
                 print(f"Page {page_number} written to frame {self.page_table[page_number]}")
@@ -38,14 +38,14 @@ class LruMMU(MMU):
             # Free frame available, no need to evict
             frame_index = len(self.page_table)
             self._usage_order.append(page_number)
+            # Check if the evicted page is dirty and write to disk if necessary
+
         else:
             # Evict the least recently used page
             evicted_page = self._usage_order.pop(0)
 
             if self.debug:
                 print(f"Evicting page {evicted_page} from frame {self.page_table[evicted_page]}")
-            
-            self._mark_dirty(page_number)
 
             # Check if the evicted page is dirty and write to disk if necessary
             if self._is_dirty(evicted_page):
@@ -59,10 +59,10 @@ class LruMMU(MMU):
         self.page_table[page_number] = frame_index
 
     def _is_dirty(self, page_number):
-        return page_number in self._dirty_pages
+        return page_number in self.__dirty_pages
     
     def _mark_dirty(self, page_number):
-        self._dirty_pages.add(page_number)
+        self.__dirty_pages.add(page_number)
         if self.debug:
             print(f"Marking page {page_number} as dirty")
 
