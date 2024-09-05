@@ -49,8 +49,9 @@ class LruMMU(MMU):
                 if self.debug:
                     print(f"Writing dirty page {evicted_page} to disk")
 
-            self.page_table.pop(evicted_page)
             frame_index = self.page_table[evicted_page]
+            self.page_table.pop(evicted_page)
+            self._usage_order.insert(0, page_number)
         self.page_table[page_number] = frame_index
 
     def _is_dirty(self, page_number):
