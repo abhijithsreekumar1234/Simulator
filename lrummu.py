@@ -41,6 +41,7 @@ class LruMMU(MMU):
         else:
             # Evict the least recently used page
             evicted_page = self._usage_order.pop(-1)
+            self._mark_dirty(evicted_page)
             if self.debug:
                 print(f"Evicting page {evicted_page} from frame {self.page_table[evicted_page]}")
             
