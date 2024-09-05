@@ -37,10 +37,10 @@ class LruMMU(MMU):
         if len(self.page_table) < self.num_frames:
             # Free frame available, no need to evict
             frame_index = len(self.page_table)
-            self._usage_order.insert(0, page_number)
+            self._usage_order.append(page_number)
         else:
             # Evict the least recently used page
-            evicted_page = self._usage_order.pop(-1)
+            evicted_page = self._usage_order.pop(0)
             self._mark_dirty(evicted_page)
             if self.debug:
                 print(f"Evicting page {evicted_page} from frame {self.page_table[evicted_page]}")
