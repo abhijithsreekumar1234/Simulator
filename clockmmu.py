@@ -3,29 +3,11 @@ from mmu import MMU
 
 class ClockMMU(MMU):
     def __init__(self, frames):
-
+        super().__init__(frames)
         # Initialize the ClockMMU with the given number of frames.
-
-        self.num_frames = frames
         self.frames = [None] * frames  # List to store page information
         self.clock_hand = 0  # Pointer for clock algorithm
-        self.page_table = {}  # Maps page_number to frame index
-        self.disk_reads = 0
-        self.disk_writes = 0
-        self.page_faults = 0
-        self.debug = False
 
-    def set_debug(self):
-
-        # Enable debug mode.
-
-        self.debug = True
-
-    def reset_debug(self):
-
-        # Disable debug mode.
-
-        self.debug = False
 
     def read_memory(self, page_number):
 
@@ -112,21 +94,3 @@ class ClockMMU(MMU):
                 if self.debug:
                     print(f"Second chance given to page {frame['page_number']} in frame {self.clock_hand}.")
                 self.clock_hand = (self.clock_hand + 1) % self.num_frames
-
-    def get_total_disk_reads(self):
-
-        # Return the total number of disk reads.
-
-        return self.disk_reads
-
-    def get_total_disk_writes(self):
-
-        # Return the total number of disk writes.
-
-        return self.disk_writes
-
-    def get_total_page_faults(self):
-
-        # Return the total number of page faults.
-
-        return self.page_faults

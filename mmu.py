@@ -8,6 +8,14 @@
 *
 '''
 class MMU:
+    def __init__(self, frames):
+        self.num_frames = frames  # Number of page frames
+        self.page_table = {}  # Maps page number to frame index
+        self.disk_reads = 0
+        self.disk_writes = 0
+        self.page_faults = 0
+        self.debug = False
+
     def read_memory(self, page_number):
         pass
 
@@ -15,16 +23,18 @@ class MMU:
         pass
 
     def set_debug(self):
-        pass
+        # Set debug mode
+        self.debug = True
 
     def reset_debug(self):
-        pass
+        # Disable debug mode
+        self.debug = False
 
     def get_total_disk_reads(self):
-        return -1
+        return self.disk_reads
 
     def get_total_disk_writes(self):
-        return -1
+        return self.disk_writes
 
     def get_total_page_faults(self):
-        return -1
+        return self.page_faults
