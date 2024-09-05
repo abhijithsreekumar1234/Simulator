@@ -52,7 +52,7 @@ class LruMMU(MMU):
 
             frame_index = self.page_table[evicted_page]
             self.page_table.pop(evicted_page)
-            self._usage_order.insert(0, page_number)
+            self._usage_order.append(page_number)
         self.page_table[page_number] = frame_index
 
     def _is_dirty(self, page_number):
