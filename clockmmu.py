@@ -3,7 +3,7 @@ from mmu import MMU
 
 class ClockMMU(MMU):
     def __init__(self, frames):
-        super.__init__(frames)
+        super().__init__(frames)
         # Initialize the ClockMMU with the given number of frames.
         self.frames = [None] * frames  # List to store page information
         self.clock_hand = 0  # Pointer for clock algorithm
