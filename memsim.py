@@ -4,6 +4,51 @@ from randmmu import RandMMU
 
 import sys
 
+class Memsim:
+    def __init__(self):
+        pass
+
+    def run(input_file, frames, replacement_mode):
+        PAGE_OFFSET = 12  # page is 2^12 = 4KB
+
+        if replacement_mode == "rand":
+            mmu = RandMMU(frames)
+        elif replacement_mode == "lru":
+            mmu = LruMMU(frames)
+        elif replacement_mode == "clock":
+            mmu = ClockMMU(frames)
+        else:
+            TypeError("Invalid replacement mode. Valid options are [rand, lru, clock]")
+
+        mmu.reset_debug()
+
+        ############################################################
+        # Main Loop: Process the addresses from the trace file     #
+        ############################################################
+
+        no_events = 0
+
+
+        with open(input_file, 'r') as trace_file:
+            for trace_line in trace_file:
+                trace_cmd = trace_line.strip().split(" ")
+                logical_address = int(trace_cmd[0], 16)
+                page_number = logical_address >>  PAGE_OFFSET
+
+
+                # Process read or write
+                if trace_cmd[1] == "R":
+                    mmu.read_memory(page_number)
+                elif trace_cmd[1] == "W":
+                    mmu.write_memory(page_number)
+                else:
+                    print(f"Badly formatted file. Error on line {no_events + 1}")
+                    return
+
+                no_events += 1
+
+        return [frames, no_events, mmu.get_total_disk_reads(), mmu.get_total_disk_writes(), mmu.get_total_page_faults() / no_events]
+
 
 def main():
     PAGE_OFFSET = 12  # page is 2^12 = 4KB
